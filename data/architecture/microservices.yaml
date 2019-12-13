@@ -1,0 +1,9 @@
+display-name: Microservices
+definition-url: https://martinfowler.com/articles/microservices.html
+requires:
+  - link-to: culture/business-capability-centric-teams
+    cited-in-url: "#OrganizedAroundBusinessCapabilities"
+  - link-to: discipline/continuous-delivery
+    cited-in-url: "#InfrastructureAutomation"
+  - link-to: pattern/bounded-context
+    cited-in-url: "#DecentralizedDataManagement"

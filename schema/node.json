@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/make-the-journey-io/make-the-journey-map/tree/master/schema/node.json",
+  "type": "object",
+  "properties": {
+    "display-name": {
+      "type": "string"
+    },
+    "definition-url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "link-to": {
+            "type": "string"
+          },
+          "cited-in-url": {
+            "type": "string",
+            "format": "uri-reference"
+          }
+        },
+        "required": [
+          "link-to",
+          "cited-in-url"
+        ]
+      }
+    }
+  },
+  "required": [
+    "display-name",
+    "definition-url"
+  ]
+}
