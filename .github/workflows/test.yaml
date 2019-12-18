@@ -10,5 +10,5 @@ jobs:
     steps:
       - run: apk add --no-cache git
       - uses: actions/checkout@v1
-      - run: go get
+      - run: go mod download
       - run: go run validate.go
