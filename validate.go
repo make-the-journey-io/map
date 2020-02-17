@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -48,30 +47,19 @@ func checkNode(schemaLoader gojsonschema.JSONLoader, path string) []error {
 	return errs
 }
 
-func main() {
+// DataErrors checks whether the data conforms to the schema and returns all data file errors (if any)
+func DataErrors() map[string][]error {
 	schemaLoader := gojsonschema.NewReferenceLoader("file://./schema/node.json")
-	var failed bool
+	files := make(map[string][]error)
 
 	filepath.Walk("./data", func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		errors := checkNode(schemaLoader, path)
-		if len(errors) == 0 {
-			fmt.Printf("✅ %s is valid\n", path)
-		} else {
-			failed = true
-			fmt.Printf("⛔️ %s had errors:\n", path)
-			for _, err := range errors {
-				fmt.Printf("   - %s\n", err)
-			}
-		}
-
+		files[path] = checkNode(schemaLoader, path)
 		return nil
 	})
 
-	if failed {
-		os.Exit(1)
-	}
+	return files
 }
