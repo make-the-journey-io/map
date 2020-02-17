@@ -16,7 +16,8 @@
         "type": "object",
         "properties": {
           "link-to": {
-            "type": "string"
+            "type": "string",
+            "format": "cross-referenced-data"
           },
           "cited-in-url": {
             "type": "string",

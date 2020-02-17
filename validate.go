@@ -49,7 +49,9 @@ func checkNode(schemaLoader gojsonschema.JSONLoader, path string) []error {
 
 // DataErrors checks whether the data conforms to the schema and returns all data file errors (if any)
 func DataErrors() map[string][]error {
+	gojsonschema.FormatCheckers.Add("cross-referenced-data", CrossReferencedDataChecker{})
 	schemaLoader := gojsonschema.NewReferenceLoader("file://./schema/node.json")
+
 	files := make(map[string][]error)
 
 	filepath.Walk("./data", func(path string, info os.FileInfo, err error) error {
