@@ -6,7 +6,7 @@ jobs:
     name: Validate map integrity
     runs-on: ubuntu-latest
     container:
-      image: golang:1.13-alpine3.10
+      image: golang:1.13-alpine3.11
     steps:
       - run: apk add --no-cache git
       - uses: actions/checkout@v1
