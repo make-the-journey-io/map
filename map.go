@@ -10,7 +10,18 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-func loadNode(filename string) ([]byte, error) {
+// Stage represents the individual stages on the map
+type Stage struct {
+	path   string
+	errors []error
+}
+
+// JourneyMap contains the complete definition of stages on the map
+type JourneyMap struct {
+	stages []*Stage
+}
+
+func loadStageFile(filename string) ([]byte, error) {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -24,44 +35,44 @@ func loadNode(filename string) ([]byte, error) {
 	return data, nil
 }
 
-func checkNode(schemaLoader gojsonschema.JSONLoader, path string) []error {
-	var errs []error
+func loadStage(schemaLoader gojsonschema.JSONLoader, path string) *Stage {
+	stage := Stage{path: path}
 
-	node, err := loadNode(path)
+	node, err := loadStageFile(path)
 	if err != nil {
-		errs = append(errs, err)
+		stage.errors = append(stage.errors, err)
 	}
 
 	documentLoader := gojsonschema.NewBytesLoader(node)
 	validationResult, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		errs = append(errs, err)
+		stage.errors = append(stage.errors, err)
 	}
 
 	if !validationResult.Valid() {
 		for _, desc := range validationResult.Errors() {
-			errs = append(errs, errors.New(desc.String()))
+			stage.errors = append(stage.errors, errors.New(desc.String()))
 		}
 	}
 
-	return errs
+	return &stage
 }
 
-// DataErrors checks whether the data conforms to the schema and returns all data file errors (if any)
-func DataErrors() map[string][]error {
+// LoadMap builds the entire journey from the YAML data files
+func LoadMap() JourneyMap {
 	gojsonschema.FormatCheckers.Add("cross-referenced-data", CrossReferencedDataChecker{})
 	schemaLoader := gojsonschema.NewReferenceLoader("file://./schema/node.json")
 
-	files := make(map[string][]error)
+	m := JourneyMap{}
 
 	filepath.Walk("./data", func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		files[path] = checkNode(schemaLoader, path)
+		m.stages = append(m.stages, loadStage(schemaLoader, path))
 		return nil
 	})
 
-	return files
+	return m
 }
