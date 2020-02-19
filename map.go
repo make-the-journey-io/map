@@ -6,12 +6,22 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ghodss/yaml"
+	jsonyaml "github.com/ghodss/yaml"
 	"github.com/xeipuuv/gojsonschema"
+	"gopkg.in/yaml.v2"
 )
+
+type Link struct {
+	LinkTo     string `yaml:"link-to"`
+	CitedInURL string `yaml:"cited-in-url"`
+}
 
 // Stage represents the individual stages on the map
 type Stage struct {
+	DisplayName   string `yaml:"display-name"`
+	DefinitionURL string `yaml:"definition-url"`
+	Requires      []Link `yaml:"requires"`
+
 	path   string
 	errors []error
 }
@@ -27,7 +37,7 @@ func loadStageFile(filename string) ([]byte, error) {
 		return nil, err
 	}
 
-	data, err = yaml.YAMLToJSON(data)
+	data, err = jsonyaml.YAMLToJSON(data)
 	if err != nil {
 		return nil, err
 	}
@@ -35,24 +45,37 @@ func loadStageFile(filename string) ([]byte, error) {
 	return data, nil
 }
 
+func validateStage(schemaLoader gojsonschema.JSONLoader, content []byte) []error {
+	var errs []error
+
+	documentLoader := gojsonschema.NewBytesLoader(content)
+	validationResult, err := gojsonschema.Validate(schemaLoader, documentLoader)
+	if err != nil {
+		errs = append(errs, err)
+	} else {
+		for _, desc := range validationResult.Errors() {
+			errs = append(errs, errors.New(desc.String()))
+		}
+	}
+
+	return errs
+}
+
 func loadStage(schemaLoader gojsonschema.JSONLoader, path string) *Stage {
 	stage := Stage{path: path}
 
-	node, err := loadStageFile(path)
+	content, err := loadStageFile(path)
 	if err != nil {
 		stage.errors = append(stage.errors, err)
+		return &stage
 	}
 
-	documentLoader := gojsonschema.NewBytesLoader(node)
-	validationResult, err := gojsonschema.Validate(schemaLoader, documentLoader)
+	schemaErrors := validateStage(schemaLoader, content)
+	stage.errors = append(stage.errors, schemaErrors...)
+
+	err = yaml.Unmarshal(content, &stage)
 	if err != nil {
 		stage.errors = append(stage.errors, err)
-	}
-
-	if !validationResult.Valid() {
-		for _, desc := range validationResult.Errors() {
-			stage.errors = append(stage.errors, errors.New(desc.String()))
-		}
 	}
 
 	return &stage
