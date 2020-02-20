@@ -31,6 +31,12 @@ type JourneyMap struct {
 	stages []*Stage
 }
 
+var stageSchemaLoader gojsonschema.JSONLoader
+
+func init() {
+	stageSchemaLoader = gojsonschema.NewReferenceLoader("file://./schema/node.json")
+}
+
 func loadStageFile(filename string) ([]byte, error) {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -45,11 +51,11 @@ func loadStageFile(filename string) ([]byte, error) {
 	return data, nil
 }
 
-func validateStage(schemaLoader gojsonschema.JSONLoader, content []byte) []error {
+func validateStage(content []byte) []error {
 	var errs []error
 
 	documentLoader := gojsonschema.NewBytesLoader(content)
-	validationResult, err := gojsonschema.Validate(schemaLoader, documentLoader)
+	validationResult, err := gojsonschema.Validate(stageSchemaLoader, documentLoader)
 	if err != nil {
 		errs = append(errs, err)
 	} else {
@@ -61,7 +67,7 @@ func validateStage(schemaLoader gojsonschema.JSONLoader, content []byte) []error
 	return errs
 }
 
-func loadStage(schemaLoader gojsonschema.JSONLoader, path string) *Stage {
+func loadStage(path string) *Stage {
 	stage := Stage{path: path}
 
 	content, err := loadStageFile(path)
@@ -70,7 +76,7 @@ func loadStage(schemaLoader gojsonschema.JSONLoader, path string) *Stage {
 		return &stage
 	}
 
-	schemaErrors := validateStage(schemaLoader, content)
+	schemaErrors := validateStage(content)
 	stage.errors = append(stage.errors, schemaErrors...)
 
 	err = yaml.Unmarshal(content, &stage)
@@ -83,9 +89,6 @@ func loadStage(schemaLoader gojsonschema.JSONLoader, path string) *Stage {
 
 // LoadMap builds the entire journey from the YAML data files
 func LoadMap() JourneyMap {
-	gojsonschema.FormatCheckers.Add("cross-referenced-data", CrossReferencedDataChecker{})
-	schemaLoader := gojsonschema.NewReferenceLoader("file://./schema/node.json")
-
 	m := JourneyMap{}
 
 	filepath.Walk("./data", func(path string, info os.FileInfo, err error) error {
@@ -93,7 +96,7 @@ func LoadMap() JourneyMap {
 			return nil
 		}
 
-		m.stages = append(m.stages, loadStage(schemaLoader, path))
+		m.stages = append(m.stages, loadStage(path))
 		return nil
 	})
 
