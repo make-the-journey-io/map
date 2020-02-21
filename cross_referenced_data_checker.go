@@ -17,7 +17,7 @@ func (f CrossReferencedDataChecker) IsFormat(input interface{}) bool {
 		return false
 	}
 
-	path := "data/" + reference + ".yaml"
+	path := idToPath(reference)
 	if _, err := os.Stat(path); err != nil {
 		fmt.Printf("⛔️ link error to %s: %s\n", path, err)
 		return false

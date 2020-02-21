@@ -4,16 +4,18 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 
 	jsonyaml "github.com/ghodss/yaml"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v2"
 )
 
+// Link refers to another Stage by their identifier
 type Link struct {
 	LinkTo     string `yaml:"link-to"`
 	CitedInURL string `yaml:"cited-in-url"`
+
+	stage *Stage
 }
 
 // Stage represents the individual stages on the map
@@ -22,13 +24,14 @@ type Stage struct {
 	DefinitionURL string `yaml:"definition-url"`
 	Requires      []Link `yaml:"requires"`
 
+	id     string
 	path   string
 	errors []error
 }
 
 // JourneyMap contains the complete definition of stages on the map
 type JourneyMap struct {
-	stages []*Stage
+	stages map[string]*Stage
 }
 
 var stageSchemaLoader gojsonschema.JSONLoader
@@ -67,8 +70,8 @@ func validateStage(content []byte) []error {
 	return errs
 }
 
-func loadStage(path string) *Stage {
-	stage := Stage{path: path}
+func load(path string) *Stage {
+	stage := Stage{path: path, id: pathToID(path)}
 
 	content, err := loadStageFile(path)
 	if err != nil {
@@ -87,18 +90,32 @@ func loadStage(path string) *Stage {
 	return &stage
 }
 
+func resolveLinks(m *JourneyMap) {
+	for _, s := range m.stages {
+		for lid := range s.Requires {
+			link := &s.Requires[lid]
+			ref := m.stages[link.LinkTo]
+			link.stage = ref
+		}
+	}
+}
+
 // LoadMap builds the entire journey from the YAML data files
 func LoadMap() JourneyMap {
 	m := JourneyMap{}
+	m.stages = make(map[string]*Stage)
 
-	filepath.Walk("./data", func(path string, info os.FileInfo, err error) error {
+	walk(func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		m.stages = append(m.stages, loadStage(path))
+		stage := load(path)
+		m.stages[stage.id] = stage
 		return nil
 	})
+
+	resolveLinks(&m)
 
 	return m
 }

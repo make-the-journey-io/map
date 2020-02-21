@@ -18,6 +18,10 @@ func main() {
 				fmt.Printf("   - %s\n", err)
 			}
 		}
+
+		for _, link := range stage.Requires {
+			fmt.Printf("   - requires: '%s' ➡ %s\n", link.stage.DisplayName, link.stage.path)
+		}
 	}
 
 	if failed {
