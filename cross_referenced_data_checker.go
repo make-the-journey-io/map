@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/xeipuuv/gojsonschema"
 )
 
 // CrossReferencedDataChecker is a JSON schema format validator that enforces valid links to other data points
@@ -15,11 +17,15 @@ func (f CrossReferencedDataChecker) IsFormat(input interface{}) bool {
 		return false
 	}
 
-	path := "data/" + reference + ".yaml"
+	path := idToPath(reference)
 	if _, err := os.Stat(path); err != nil {
 		fmt.Printf("⛔️ link error to %s: %s\n", path, err)
 		return false
 	}
 
 	return true
+}
+
+func init() {
+	gojsonschema.FormatCheckers.Add("cross-referenced-data", CrossReferencedDataChecker{})
 }
