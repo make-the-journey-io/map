@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const stageDir = "data"
+const stageDir = "stages"
 
 func pathToID(path string) string {
 	return strings.Replace(strings.Replace(path, ".yaml", "", 1), stageDir+"/", "", 1)
