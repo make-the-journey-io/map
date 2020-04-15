@@ -91,17 +91,23 @@ func load(path string) *Stage {
 	return &stage
 }
 
+func resolveStage(m *JourneyMap, id string) *Stage {
+	ref := m.stages[id]
+	if ref == nil {
+		ref = &Stage{id: "error", DisplayName: "Error"}
+	}
+	return ref
+}
+
 func resolveLinks(m *JourneyMap) {
 	for _, s := range m.stages {
 		for lid := range s.Requires {
 			link := &s.Requires[lid]
-			ref := m.stages[link.LinkTo]
-			link.stage = ref
+			link.stage = resolveStage(m, link.LinkTo)
 		}
 		for rid := range s.RelatesTo {
 			link := &s.RelatesTo[rid]
-			ref := m.stages[link.LinkTo]
-			link.stage = ref
+			link.stage = resolveStage(m, link.LinkTo)
 		}
 	}
 }
