@@ -23,6 +23,7 @@ type Stage struct {
 	DisplayName   string `yaml:"display-name"`
 	DefinitionURL string `yaml:"definition-url"`
 	Requires      []Link `yaml:"requires"`
+	RelatesTo     []Link `yaml:"relates-to"`
 
 	id     string
 	path   string
@@ -94,6 +95,11 @@ func resolveLinks(m *JourneyMap) {
 	for _, s := range m.stages {
 		for lid := range s.Requires {
 			link := &s.Requires[lid]
+			ref := m.stages[link.LinkTo]
+			link.stage = ref
+		}
+		for rid := range s.RelatesTo {
+			link := &s.RelatesTo[rid]
 			ref := m.stages[link.LinkTo]
 			link.stage = ref
 		}

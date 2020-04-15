@@ -1,2 +1,5 @@
 display-name: Culture of Automation
 definition-url: https://vimeo.com/131632250#t=650s
+relates-to:
+  - link-to: discipline/continuous-delivery
+    cited-in-url: https://vimeo.com/131632250#t=830s

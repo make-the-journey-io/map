@@ -2,6 +2,27 @@
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "$id": "https://github.com/make-the-journey-io/make-the-journey-map/tree/master/schema/node.json",
   "type": "object",
+
+  "definitions": {
+    "link": {
+      "type": "object",
+      "properties": {
+        "link-to": {
+          "type": "string",
+          "format": "cross-referenced-data"
+        },
+        "cited-in-url": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "link-to",
+        "cited-in-url"
+      ]
+    }
+  },
+
   "properties": {
     "display-name": {
       "type": "string"
@@ -13,21 +34,13 @@
     "requires": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "link-to": {
-            "type": "string",
-            "format": "cross-referenced-data"
-          },
-          "cited-in-url": {
-            "type": "string",
-            "format": "uri-reference"
-          }
-        },
-        "required": [
-          "link-to",
-          "cited-in-url"
-        ]
+        "$ref": "#/definitions/link"
+      }
+    },
+    "relates-to": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/link"
       }
     }
   },
