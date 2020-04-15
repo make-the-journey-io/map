@@ -107,9 +107,10 @@ func resolveLinks(m *JourneyMap) {
 }
 
 // LoadMap builds the entire journey from the YAML data files
-func LoadMap() JourneyMap {
+func LoadMap() (bool, JourneyMap) {
 	m := JourneyMap{}
 	m.stages = make(map[string]*Stage)
+	valid := true
 
 	walk(func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
@@ -117,11 +118,12 @@ func LoadMap() JourneyMap {
 		}
 
 		stage := load(path)
+		valid = valid && len(stage.errors) == 0
 		m.stages[stage.id] = stage
 		return nil
 	})
 
 	resolveLinks(&m)
 
-	return m
+	return valid, m
 }

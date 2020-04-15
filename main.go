@@ -1,40 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"os"
 )
 
-func showSuccess(s *Stage) {
-	fmt.Printf("✅ %s is valid\n", s.path)
-	for _, link := range s.Requires {
-		fmt.Printf("   - requires: '%s' ➡ %s\n", link.stage.DisplayName, link.stage.path)
-	}
-	for _, link := range s.RelatesTo {
-		fmt.Printf("   - relates to: '%s' ➡ %s\n", link.stage.DisplayName, link.stage.path)
-	}
-}
-
-func showFailure(s *Stage) {
-	fmt.Printf("⛔️ %s had errors:\n", s.path)
-	for _, err := range s.errors {
-		fmt.Printf("   - %s\n", err)
-	}
-}
-
 func main() {
-	var failed bool
+	graphPtr := flag.Bool("graph", false, "Output a dependency graph.")
+	flag.Parse()
 
-	for _, stage := range LoadMap().stages {
-		if len(stage.errors) == 0 {
-			showSuccess(stage)
-		} else {
-			failed = true
-			showFailure(stage)
-		}
+	valid, jmap := LoadMap()
+	if *graphPtr {
+		ShowGraph(&jmap)
+	} else {
+		ShowValidation(&jmap)
 	}
 
-	if failed {
+	if !valid {
 		os.Exit(1)
 	}
 }
