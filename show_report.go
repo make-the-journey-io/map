@@ -22,8 +22,8 @@ func showFailure(s *Stage) {
 }
 
 // ShowValidation prints ✅ or detailed ⛔️ results to stdout about each node in the map
-func ShowValidation(j *JourneyMap) {
-	for _, stage := range j.stages {
+func ShowValidation(m *JourneyMap) {
+	for _, stage := range m.stages {
 		if len(stage.errors) == 0 {
 			showSuccess(stage)
 		} else {

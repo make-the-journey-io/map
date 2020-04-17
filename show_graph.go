@@ -13,11 +13,11 @@ func printConnections(s *Stage) {
 }
 
 // ShowGraph prints the map as a directed graph in Grapviz DOT format to stdout
-func ShowGraph(j *JourneyMap) {
+func ShowGraph(m *JourneyMap) {
 	fmt.Println("digraph G {")
 	fmt.Println("  node [shape=box];")
 
-	for _, s := range j.stages {
+	for _, s := range m.stages {
 		fmt.Println()
 		fmt.Printf(`  "%s" [label="%s"];`, s.id, s.DisplayName)
 		fmt.Println()
