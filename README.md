@@ -23,6 +23,12 @@ To display a `.dot` format output:
 go run . -graph
 ```
 
-Both commands with exit non-zero status if the map is invalid, but only `go run .` will tell why.
+To render the graph (assumes MacOS and `graphviz` installed):
+
+```
+go run . -graph | dot -Tpng -Gdpi=200 -omap.png && open map.png
+```
+
+All commands with exit non-zero status if the map is invalid, but only `go run .` will tell why.
 
 [dot]: https://en.wikipedia.org/wiki/DOT_(graph_description_language)
