@@ -36,12 +36,6 @@
       "items": {
         "$ref": "#/definitions/link"
       }
-    },
-    "relates-to": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/link"
-      }
     }
   },
   "required": [

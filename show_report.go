@@ -9,9 +9,6 @@ func showSuccess(s *Stage) {
 	for _, link := range s.Requires {
 		fmt.Printf("   - requires: '%s' ➡ %s\n", link.stage.DisplayName, link.stage.path)
 	}
-	for _, link := range s.RelatesTo {
-		fmt.Printf("   - relates to: '%s' ➡ %s\n", link.stage.DisplayName, link.stage.path)
-	}
 }
 
 func showFailure(s *Stage) {

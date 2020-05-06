@@ -6,10 +6,6 @@ func printConnections(s *Stage) {
 	for _, r := range s.Requires {
 		fmt.Printf(`  "%s"->"%s" [label="%s"]`+"\n", s.id, r.stage.id, "requires")
 	}
-
-	for _, r := range s.RelatesTo {
-		fmt.Printf(`  "%s"->"%s" [label="%s"]`+"\n", s.id, r.stage.id, "relates to")
-	}
 }
 
 // ShowGraph prints the map as a directed graph in Grapviz DOT format to stdout
