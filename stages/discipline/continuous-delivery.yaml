@@ -1,2 +1,5 @@
 display-name: Continuous Delivery
 definition-url: https://martinfowler.com/bliki/ContinuousDelivery.html
+requires:
+  - link-to: culture/automation
+    cited-in-url: https://vimeo.com/131632250#t=830s
