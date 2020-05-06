@@ -1,0 +1,5 @@
+display-name: Domain-Driven Design
+definition-url: https://martinfowler.com/bliki/DomainDrivenDesign.html
+requires:
+  - link-to: pattern/bounded-context
+    cited-in-url: "#samepage"
