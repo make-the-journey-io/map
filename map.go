@@ -31,7 +31,7 @@ type Stage struct {
 
 // JourneyMap contains the complete definition of stages on the map
 type JourneyMap struct {
-	stages map[string]*Stage
+	stages []*Stage
 }
 
 var stageSchemaLoader gojsonschema.JSONLoader
@@ -91,7 +91,13 @@ func load(path string) *Stage {
 }
 
 func resolveStage(m *JourneyMap, id string) *Stage {
-	ref := m.stages[id]
+	var ref *Stage
+	for i := range m.stages {
+		if m.stages[i].id == id {
+			ref = m.stages[i]
+			break
+		}
+	}
 	if ref == nil {
 		ref = &Stage{id: "error", DisplayName: "Error"}
 	}
@@ -110,7 +116,6 @@ func resolveLinks(m *JourneyMap) {
 // LoadMap builds the entire journey from the YAML data files
 func LoadMap() (bool, JourneyMap) {
 	m := JourneyMap{}
-	m.stages = make(map[string]*Stage)
 	valid := true
 
 	walk(func(path string, info os.FileInfo, err error) error {
@@ -120,7 +125,7 @@ func LoadMap() (bool, JourneyMap) {
 
 		stage := load(path)
 		valid = valid && len(stage.errors) == 0
-		m.stages[stage.id] = stage
+		m.stages = append(m.stages, stage)
 		return nil
 	})
 
