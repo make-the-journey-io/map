@@ -9,6 +9,10 @@
 - [ ] A decent view can be generated without external tooling.
   I think an octilinear routing layout and an isometric view would look nice.
 
+## Current view
+
+![](docs/map.png)
+
 ## Running
 
 To validate the entire map:
@@ -26,7 +30,7 @@ go run . -graph
 To render the graph (assumes MacOS and `graphviz` installed):
 
 ```
-go run . -graph | dot -Tpng -Gdpi=200 -omap.png && open map.png
+go run . -graph | dot -Tpng -Gdpi=200 -odocs/map.png && open docs/map.png
 ```
 
 All commands with exit non-zero status if the map is invalid, but only `go run .` will tell why.
