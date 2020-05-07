@@ -6,6 +6,7 @@
 - [x] The graph is validated for syntax.
 - [x] The graph is validated for references.
 - [x] The graph can be printed in [DOT format][dot].
+- [ ] The graph visibly contains the citation URLs.
 - [ ] A decent view can be generated without external tooling.
   I think an octilinear routing layout and an isometric view would look nice.
 
