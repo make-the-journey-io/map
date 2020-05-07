@@ -15,6 +15,16 @@
 
 ## Running
 
+### Short version
+
+```
+bin/check-and-generate.sh
+```
+
+will validate and generate the current version of `docs/map.png`.
+
+### Detailed version
+
 To validate the entire map:
 
 ```
