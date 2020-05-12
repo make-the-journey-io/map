@@ -3,3 +3,5 @@ definition-url: https://martinfowler.com/bliki/DevOpsCulture.html
 requires:
   - link-to: behaviour/autonomy
     cited-in-url: "#samepage"
+  - link-to: culture/automation
+    cited-in-url: "#samepage"

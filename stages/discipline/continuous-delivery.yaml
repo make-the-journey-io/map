@@ -1,7 +1,7 @@
 display-name: Continuous Delivery
 definition-url: https://martinfowler.com/bliki/ContinuousDelivery.html
 requires:
-  - link-to: culture/automation
-    cited-in-url: https://vimeo.com/131632250#t=830s
   - link-to: culture/devops
+    cited-in-url: "#samepage"
+  - link-to: pattern/deployment-pipeline
     cited-in-url: "#samepage"
