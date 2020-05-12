@@ -1,0 +1,5 @@
+display-name: DevOps Culture
+definition-url: https://martinfowler.com/bliki/DevOpsCulture.html
+requires:
+  - link-to: behaviour/autonomy
+    cited-in-url: "#samepage"

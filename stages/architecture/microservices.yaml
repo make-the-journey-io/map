@@ -1,8 +1,6 @@
 display-name: Microservices
 definition-url: https://martinfowler.com/articles/microservices.html
 requires:
-  - link-to: culture/automation
-    cited-in-url: https://samnewman.io/talks/principles-of-microservices/
   - link-to: culture/business-capability-centric-teams
     cited-in-url: "#OrganizedAroundBusinessCapabilities"
   - link-to: discipline/continuous-delivery
