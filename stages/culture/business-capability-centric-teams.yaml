@@ -1,2 +1,5 @@
 display-name: Business Capability Centric Teams
 definition-url: https://martinfowler.com/bliki/BusinessCapabilityCentric.html
+requires:
+  - link-to: behaviour/autonomy
+    cited-in-url: https://martinfowler.com/articles/products-over-projects.html#OwnershipOfCodeAndSystems
