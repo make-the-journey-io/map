@@ -1,10 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
+
+func resolveRelativeUrl(maybeRelative string, original string) string {
+	url := maybeRelative
+	if strings.Index(url, "#") == 0 {
+		url = original + url
+	}
+	return url
+}
 
 func printConnections(s *Stage) {
 	for _, r := range s.Requires {
-		fmt.Printf(`  "%s"->"%s" [label="%s"]`+"\n", s.id, r.stage.id, "requires")
+		url := resolveRelativeUrl(r.CitedInURL, s.DefinitionURL)
+		fmt.Printf(`  "%s"->"%s" [label="%s", URL="%s"]`+"\n", s.id, r.stage.id, "requires", url)
 	}
 }
 
@@ -16,7 +28,7 @@ func ShowGraph(m *JourneyMap) {
 
 	for _, s := range m.stages {
 		fmt.Println()
-		fmt.Printf(`  "%s" [label="%s"];`, s.id, s.DisplayName)
+		fmt.Printf(`  "%s" [label="%s", URL="%s"];`, s.id, s.DisplayName, s.DefinitionURL)
 		fmt.Println()
 		printConnections(s)
 	}

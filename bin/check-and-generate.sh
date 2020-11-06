@@ -1,5 +1,6 @@
 #!/bin/bash -e
-target="$(git rev-parse --show-toplevel)/docs/map.png"
+target_prefix="$(git rev-parse --show-toplevel)/docs/map"
 go run .
-go run . -graph | dot -Gdpi=200 -Tpng -o"$target"
-git status --short "$target"
+go run . -graph > "$target_prefix.dot"
+dot "$target_prefix.dot" -Tsvg -o"$target_prefix.svg"
+git status --short "$target_prefix*"

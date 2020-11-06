@@ -12,7 +12,7 @@
 
 ## Current view
 
-![](docs/map.png)
+![View](docs/map.svg)
 
 ## Running
 
