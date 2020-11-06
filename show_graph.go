@@ -16,14 +16,15 @@ func resolveRelativeUrl(maybeRelative string, original string) string {
 func printConnections(s *Stage) {
 	for _, r := range s.Requires {
 		url := resolveRelativeUrl(r.CitedInURL, s.DefinitionURL)
-		fmt.Printf(`  "%s"->"%s" [label="%s", URL="%s"]`+"\n", s.id, r.stage.id, "requires", url)
+		fmt.Printf(`  "%s"->"%s" [xlabel="requires", URL="%s"]`+"\n", s.id, r.stage.id, url)
 	}
 }
 
 // ShowGraph prints the map as a directed graph in Grapviz DOT format to stdout
 func ShowGraph(m *JourneyMap) {
 	fmt.Println("digraph G {")
-	fmt.Println(`  node [shape="box" fontname="Roboto" fontsize="14" margin="0.15,0.10" height="0"];`)
+	fmt.Println("  splines=polyline;")
+	fmt.Println(`  node [shape="box" style="rounded" fontname="Roboto" fontsize="14" margin="0.15,0.10" height="0"];`)
 	fmt.Println(`  edge [fontname="Roboto" fontsize="12"];`)
 
 	for _, s := range m.stages {
