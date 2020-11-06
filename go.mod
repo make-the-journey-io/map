@@ -1,4 +1,4 @@
-module github.com/make-the-journey-io/make-the-journey-map
+module github.com/make-the-journey-io/map
 
 go 1.15
 
